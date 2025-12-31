@@ -1,0 +1,45 @@
+name: Daily Update README
+
+on:
+  # 允许手动触发 (方便测试)
+  workflow_dispatch:
+  # 每天 UTC 时间 0点 (北京时间早上8点) 自动触发
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    # 必须赋予写入权限
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update Date in README
+        run: |
+          # 获取当前时间 (UTC)
+          NOW=$(date "+%Y-%m-%d %H:%M:%S")
+          
+          # 定义要写入的内容
+          CONTENT="Last Updated: $NOW (UTC)"
+          
+          # 使用 perl 替换 README 中标记之间的内容
+          perl -i -0777 -pe "s/()(.*?)()/\$1\n$CONTENT\n\$3/s" README.md
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          # 检查是否有变动，有变动才提交
+          if [[ -n $(git status -s) ]]; then
+            git add README.md
+            git commit -m "Auto update README time"
+            git push
+            echo "✅ README updated successfully."
+          else
+            echo "⚠️ No changes to commit."
+          fi
