@@ -16,12 +16,14 @@ Here are some ideas to get you started:
 -->
 # Hi there! 👋
 
-我是 [你的名字]，一名开发者。
+我是 [ltgkb]，一名开发者。
 
 ---
 
 ⏳ **自动更新时间**
-- name: Run Update Script
+注意： `.*/\nLast Updated: $DATE (UTC)\n/z" README.md || true # 注意：上面的 sed 写法比较简略，为了通用性，我们用下面更稳妥的脚本方式：
+
+  - name: Run Update Script
     run: |
       # 获取当前日期
       NOW=$(date "+%Y-%m-%d %H:%M:%S")
