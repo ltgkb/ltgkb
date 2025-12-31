@@ -1,26 +1,9 @@
-## Hi there 👋
-
-<!--
-**ltgkb/ltgkb** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
-Here are some ideas to get you started:
-
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
 # Hi there! 👋
- 
-我是 [ltgkb]，一名开发者。
+
+我是 GitHub 开发者。
+
+欢迎来到我的主页！这里会自动更新我最后一次活跃的时间。
 
 ---
 
-workflow_dispatch:
-  # 每天 UTC 时间 0点 (北京时间早上8点) 自动触发
-  schedule:
-    - cron: '0 0 * * *'
+### ⏳ 活跃状态
