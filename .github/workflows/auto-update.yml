@@ -17,7 +17,7 @@ jobs:
 
       - name: Update Date in README
         run: |
-          NOW=$(date "+%Y-%m-%d %H:%M:%S")
+          NOW=$(TZ=Asia/Shanghai date "+%Y-%m-%d %H:%M:%S")
           CONTENT="最后更新时间: $NOW"
           perl -0777 -pi -e "s/()(.*?)()/\$1\n$CONTENT\n\$3/s" README.md
 
