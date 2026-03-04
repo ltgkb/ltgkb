@@ -10,7 +10,7 @@ on:
 jobs: 
   update-readme:    
     runs-on: ubuntu-latest
-    # 这一步非常重要：必须赋予写入权限，否则无法提交修改
+    # 必须赋予写入权限，否则无法提交修改
     permissions:
       contents: write
     
@@ -20,14 +20,15 @@ jobs:
    
       - name: Update Date in README
         run: |
-          # 1. 获取当前时间 (UTC)
+          # 1. 获取当前时间 (UTC) 
+          # 你也可以加 8 小时换算成北京时间：NOW=$(TZ=Asia/Shanghai date "+%Y-%m-%d %H:%M:%S")
           NOW=$(date "+%Y-%m-%d %H:%M:%S")
           
           # 2. 定义要写入的内容
-          CONTENT="Last Updated: $NOW (UTC)"
+          CONTENT="最后更新时间: $NOW"
           
-          # 3. 使用 perl 正则表达式替换 README 中标记之间的内容
-          # 注意：这里会寻找 和 perl -i -0777 -pe "s/()(.*?)()/\$1\n$CONTENT\n\$3/s" README.md
+          # 3. 使用 perl 正则表达式替换 START_DATE 和 END_DATE 之间的内容 (这里去掉了前面的 #)
+          perl -0777 -pi -e "s/()(.*?)()/\$1\n$CONTENT\n\$3/s" README.md
 
       - name: Commit and Push
         run: |
