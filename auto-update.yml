@@ -28,8 +28,7 @@ jobs:
           CONTENT="最后更新时间: $NOW"
           
           # 3. 使用 perl 正则表达式替换 START_DATE 和 END_DATE 之间的内容 (这里去掉了前面的 #)
-          perl -0777 -pi -e "s/()(.*?)()/\$1\n$CONTENT\n\$3/s" README.md
-
+         perl -0777 -pi -e "s/()(.*?)()/\$1\n$CONTENT\n\$3/s" README.md
       - name: Commit and Push
         run: |
           # 配置 git 用户信息（显示为 GitHub Action 机器人）
