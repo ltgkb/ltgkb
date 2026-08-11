@@ -4,32 +4,50 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
+      timezone: 'Asia/Shanghai'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-readme-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    timeout-minutes: 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-      - name: Update Date in README
+      - name: Update README timestamp
+        shell: bash
         run: |
-          NOW=$(TZ=Asia/Shanghai date "+%Y-%m-%d %H:%M:%S")
-          CONTENT="最后更新时间: $NOW"
-          perl -0777 -pi -e "s/()(.*?)()/\$1\n$CONTENT\n\$3/s" README.md
+          set -euo pipefail
 
-      - name: Commit and Push
+          export NOW
+          NOW="$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')"
+
+          perl -0pi -e '
+            s{\A最后更新时间: [^\n]*\n+}{};
+            s{(<!-- START_DATE -->).*?(<!-- END_DATE -->)}{$1\n最后更新时间: $ENV{NOW}\n$2}s
+              or die "README date markers were not found\n";
+          ' README.md
+
+      - name: Commit and push changes
+        shell: bash
         run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
-          if [[ -n $(git status -s) ]]; then
-            git add README.md
-            git commit -m "Auto update README time"
-            git push
-            echo "✅ README updated successfully."
-          else
-            echo "⚠️ No changes to commit."
+          set -euo pipefail
+
+          if git diff --quiet -- README.md; then
+            echo "No README changes to commit."
+            exit 0
           fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: update README timestamp"
+          git push
